@@ -1,12 +1,12 @@
-import logo from './logo.svg';
-import './App.css';
 
+import './App.css';
+import Layout from './layout/Layout';
 function App() {
   return (
     <div className="App">
-        <h1>
+        <Layout>
           Hello Worls
-        </h1>
+        </Layout>
     </div>
   );
 }
