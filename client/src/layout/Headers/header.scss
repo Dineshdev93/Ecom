@@ -2,7 +2,9 @@ header {
   background-color: #fff;
   position: sticky;
   width: 100%;
-
+  padding: 10px;
+  box-shadow: 0px 0px 5px 0px gray;
+  // position: fixed;
   nav {
     display: flex;
     justify-content: space-between;
@@ -78,10 +80,11 @@ header {
 }
 
 .sidebar{
+
   .p2 a{
     text-decoration: none;
     font-size: 18px;
-    color: black;
+    color: white;
     font-weight: 500;
   }
   .badge-icon2,
@@ -89,6 +92,7 @@ header {
       i {
         font-size: 28px;
         position: relative;
+        
         .badge {
           position: absolute;
           top: -5px; /* Adjust the position */
@@ -125,6 +129,7 @@ header {
         }
         .dropdown-toggle::after{
             content: unset !important;
+        
         }  
       }
       .sidebar .offcanvas offcanvas-start .show{
@@ -133,5 +138,6 @@ header {
        .dropdown2 .btn-primary{
         --bs-btn-border-color : #bad9ff;
        }
-}
+       
+        }
 
