@@ -26,10 +26,10 @@ export default function Header() {
             <NavLink to={"/products"}>Products</NavLink>
           </div>
           <div className="badge-icon">
-            <span>
+            <NavLink to={'/cart'}>
               <i class="fa-solid fa-cart-shopping counts" data-count={0}></i>
               <span className="badge">0</span>
-            </span>
+            </NavLink>
           </div>
           <div className="dropdown-basic">
             <Dropdown>
@@ -38,9 +38,9 @@ export default function Header() {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                <Dropdown.Item href="/userprofile">Profile</Dropdown.Item>
+                <Dropdown.Item href="/login">Log in</Dropdown.Item>
+                
               </Dropdown.Menu>
             </Dropdown>
           </div>
