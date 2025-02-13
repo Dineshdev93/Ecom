@@ -10,23 +10,42 @@ import Login from "./pages/Userauth/Login";
 import Signup from "./pages/Userauth/Signup";
 import Forgotpassword from "./pages/Userauth/Forgotpassword";
 import Shipping from "./pages/Shipping/Shipping";
+import Checkout from "./pages/Checkout/Checkout";
+import Userorders from "./pages/Userorders/Userorders";
+import AdminLogin from "./pages/AdminLogin/AdminLogin";
+import AdminCommonlayout from "./pages/Admin/AdminCommonlayout";
+import Admindashboard from "./pages/Admin/Admindashboard";
+import Adminproducts from "./pages/Admin/Adminproducts";
+import Adminaddproduct from "./pages/Admin/Adminaddproduct";
+import ProductCategory from "./pages/Admin/ProductCategory";
+import Orders from "./pages/Admin/Orders";
 function App() {
   return (
     <div className="App ">
-      <Layout>
+      
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Productpage />} />
-          <Route path="/productsdetail/:id" element={<Productdetailspage />} />
-          <Route path="/cart" element={<Carts />} />
-          <Route path="/userprofile" element={<Userprofile />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/forgot-password" element={<Forgotpassword />} />
-          <Route path="/shipping" element={<Shipping />} />
-           
+            {/* Admin Routes */}
+          <Route path="/admin/dashboard" element={<AdminCommonlayout><Admindashboard /></AdminCommonlayout>} />
+          <Route path="/admin/products" element={<AdminCommonlayout><Adminproducts /></AdminCommonlayout>} />
+          <Route path="/admin/addproducts" element={<AdminCommonlayout><Adminaddproduct /></AdminCommonlayout>} />
+          <Route path="/admin/category" element={<AdminCommonlayout><ProductCategory /></AdminCommonlayout>} />
+          <Route path="/admin/orders" element={<AdminCommonlayout><Orders /></AdminCommonlayout>} />
+          <Route path="/admin-login" element={<Layout><AdminLogin /></Layout>} />
+            
+
+           {/* USer routes */}
+          <Route path="/" element={<Layout><Home /></Layout>} />
+          <Route path="/products" element={<Layout><Productpage /></Layout>} />
+          <Route path="/productsdetail/:id" element={<Layout><Productdetailspage /></Layout>} />
+          <Route path="/cart" element={<Layout><Carts /></Layout>} />
+          <Route path="/userprofile" element={<Layout><Userprofile /></Layout>} />
+          <Route path="/login" element={<Layout><Login /></Layout>} />
+          <Route path="/signup" element={<Layout><Signup /></Layout>} />
+          <Route path="/forgot-password" element={<Layout><Forgotpassword /></Layout>} />
+          <Route path="/shipping" element={<Layout><Shipping/></Layout>} />
+          <Route path="/checkout" element={<Layout><Checkout/></Layout>} />
+          <Route path="/user-orders" element={<Layout><Userorders/></Layout>} /> 
         </Routes>
-      </Layout>
     </div>
   );
 }
