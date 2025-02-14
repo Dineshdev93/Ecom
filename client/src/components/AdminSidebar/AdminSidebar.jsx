@@ -3,8 +3,23 @@ import "../../pages/Admin/admin.scss";
 import { Row, Col } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
-
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Adminloggedin } from "../../redux/slice/adminAuthSlice/AdminSlics";
+import { useSelector } from "react-redux";
 export default function AdminSidebar({children}) {
+    const dispatch = useDispatch()
+   const veryfyAdmin = () =>{
+       dispatch(Adminloggedin())
+   }
+   
+   const adminloggeddata  = useSelector((state) => state.admin)
+    console.log("admin data" , adminloggeddata);
+    
+   useEffect(()=>{
+      veryfyAdmin();
+   },[])
+
   return (
     <section>
       <Row>

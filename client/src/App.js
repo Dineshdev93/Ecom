@@ -19,6 +19,7 @@ import Adminproducts from "./pages/Admin/Adminproducts";
 import Adminaddproduct from "./pages/Admin/Adminaddproduct";
 import ProductCategory from "./pages/Admin/ProductCategory";
 import Orders from "./pages/Admin/Orders";
+import { Slide, ToastContainer} from 'react-toastify';
 function App() {
   return (
     <div className="App ">
@@ -30,7 +31,7 @@ function App() {
           <Route path="/admin/addproducts" element={<AdminCommonlayout><Adminaddproduct /></AdminCommonlayout>} />
           <Route path="/admin/category" element={<AdminCommonlayout><ProductCategory /></AdminCommonlayout>} />
           <Route path="/admin/orders" element={<AdminCommonlayout><Orders /></AdminCommonlayout>} />
-          <Route path="/admin-login" element={<Layout><AdminLogin /></Layout>} />
+          <Route path="/admin/admin-login" element={<Layout><AdminLogin /></Layout>} />
             
 
            {/* USer routes */}
@@ -46,6 +47,19 @@ function App() {
           <Route path="/checkout" element={<Layout><Checkout/></Layout>} />
           <Route path="/user-orders" element={<Layout><Userorders/></Layout>} /> 
         </Routes>
+        <ToastContainer
+position="top-center"
+autoClose={2000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick={false}
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+theme="light"
+transition={Slide}
+/>
     </div>
   );
 }
