@@ -37,7 +37,7 @@ export default function Orders() {
                                 <i className='fa-solid fa-trash' style={{color:"red", cursor:"pointer"}}></i>
                             </div>
                         </td>
-
+ 
                       </tr>
                       
                     </tbody>
