@@ -20,6 +20,7 @@ import Adminaddproduct from "./pages/Admin/Adminaddproduct";
 import ProductCategory from "./pages/Admin/ProductCategory";
 import Orders from "./pages/Admin/Orders";
 import { Slide, ToastContainer} from 'react-toastify';
+import Error from "./Error";
 function App() {
   return (
     <div className="App ">
@@ -46,20 +47,21 @@ function App() {
           <Route path="/shipping" element={<Layout><Shipping/></Layout>} />
           <Route path="/checkout" element={<Layout><Checkout/></Layout>} />
           <Route path="/user-orders" element={<Layout><Userorders/></Layout>} /> 
+          <Route path="*" element={<Error/>}/>
         </Routes>
         <ToastContainer
-position="top-center"
-autoClose={2000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick={false}
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-transition={Slide}
-/>
+           position="top-center"
+           autoClose={2000}
+           hideProgressBar={false}
+           newestOnTop={false}
+           closeOnClick={false}
+           rtl={false} 
+           pauseOnFocusLoss
+           draggable
+           pauseOnHover
+           theme="light"
+           transition={Slide}
+           />
     </div>
   );
 }
