@@ -38,8 +38,7 @@ exports.GetCategory = async(req,res)=>{
         const getAllcategory = await categorydb.find();
         res.status(200).json(getAllcategory)
     } catch (error) {
-        res.status(400).json(error)
-        
+        res.status(400).json(error)  
     }
 }
 
@@ -50,7 +49,7 @@ exports.AddProducts = async(req,res)=>{
     const {productname,price,discount,quantity,description} = req.body;
 
     if(!productname || !price || !discount || !quantity || !description || !file){
-        res.status(400).json({error:"all filed required"});
+       return  res.status(400).json({error:"all filed required"});
     }
 
     try {
@@ -59,17 +58,17 @@ exports.AddProducts = async(req,res)=>{
         const existingProduct = await productsdb.findOne({productname:productname});
 
         if(existingProduct){
-            res.status(400).json({error:"THis Product Already Exist"});
+          return  res.status(400).json({error:"THis Product Already Exist"});
         }else{
             const addProduct = new productsdb({
                 productname,price,discount,quantity,description,categoryid,productimage:upload.secure_url
             });
 
             await addProduct.save();
-            res.status(200).json(addProduct)
+           return res.status(200).json(addProduct)
         }
     } catch (error) {
-        res.status(400).json(error);
+       return res.status(400).json(error);
     }
 }
 

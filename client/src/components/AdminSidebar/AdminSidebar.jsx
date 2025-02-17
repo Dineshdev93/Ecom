@@ -5,21 +5,32 @@ import { NavLink } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Adminloggedin } from "../../redux/slice/adminAuthSlice/AdminSlics";
+import { Adminloggedin, Handleadminlogout } from "../../redux/slice/adminAuthSlice/AdminSlics";
 import { useSelector } from "react-redux";
-export default function AdminSidebar({children}) {
-    const dispatch = useDispatch()
-   const veryfyAdmin = () =>{
-       dispatch(Adminloggedin())
-   }
-   
-   const adminloggeddata  = useSelector((state) => state.admin)
-    console.log("admin data" , adminloggeddata);
-    
-   useEffect(()=>{
+import { useNavigate } from "react-router-dom";
+export default function AdminSidebar({ children }) {
+  const navigate = useNavigate()
+  const token = localStorage.getItem('admin-token')
+  const dispatch = useDispatch();
+  const veryfyAdmin = () => {
+    dispatch(Adminloggedin());
+  };
+  // fetch admin data 
+  useEffect(() => {
+    if(token){
       veryfyAdmin();
-   },[])
-
+    }else{
+       navigate('*')        
+    }
+  }, []);
+  const adminloggeddata = useSelector((state) => state.admin);
+  // console.log("admin data", adminloggeddata.adminloggeddata);
+   
+  const handlelogout = () =>{
+     dispatch( Handleadminlogout()) 
+     navigate('/admin/admin-login')
+  }
+  
   return (
     <section>
       <Row>
@@ -35,7 +46,8 @@ export default function AdminSidebar({children}) {
           </div>
           <div className="mt-5 sub-sidebar col-md-9">
             <div className="d-flex justify-content-center gap-4">
-              <NavLink to={'/admin/dashboard'}
+              <NavLink
+                to={"/admin/dashboard"}
                 style={{
                   fontWeight: "bold",
                   textAlign: "center",
@@ -47,19 +59,19 @@ export default function AdminSidebar({children}) {
             </div>
             <div className="d-flex  gap-4 mt-4">
               <i class="fas fa-plus-circle"></i>
-              <NavLink to={'/admin/addproducts'}>Add Product</NavLink>
+              <NavLink to={"/admin/addproducts"}>Add Product</NavLink>
             </div>
             <div className="d-flex  gap-4 mt-4">
               <i class="fas fa-folder-plus"></i>
-              <NavLink to={'/admin/category'}>Add Category</NavLink>
+              <NavLink to={"/admin/category"}>Add Category</NavLink>
             </div>
             <div className="d-flex  gap-4 mt-4">
               <i class="fas fa-box"></i>
-              <NavLink to={'/admin/products'}>Products</NavLink>
+              <NavLink to={"/admin/products"}>Products</NavLink>
             </div>
             <div className="d-flex  gap-4 mt-4">
               <i class="fas fa-truck"></i>
-              <NavLink to={'/admin/orders'}>Orders</NavLink>
+              <NavLink to={"/admin/orders"}>Orders</NavLink>
             </div>
             <div className="d-flex  gap-4 mt-4">
               <i class="fas fa-tools"></i>
@@ -89,27 +101,32 @@ export default function AdminSidebar({children}) {
             </div>
             <div className="dropdown-basic">
               <Dropdown>
-                <Dropdown.Toggle id="dropdown-basic">
-                  <i
-                    class="fa-regular fa-user"
-                    style={{ fontSize: "29px", color: "gray" }}
-                  ></i>
-                </Dropdown.Toggle>
+                
+                {adminloggeddata.adminloggeddata.map((data, index) => {
+                  return (
+                    <>
+                      <Dropdown.Toggle id="dropdown-basic">
+                        {/* <i
+                          class="fa-regular fa-user"
+                          style={{ fontSize: "29px", color: "gray" }}
+                        ></i>{" "} */}
+                        <img src={`${data.profile}`} width={55} alt="" />
+                        <br />
+                        {/* <h6>{data.name}</h6> */}
+                      </Dropdown.Toggle>
+                    </>
+                  );
+                })}
 
                 <Dropdown.Menu>
-                  <Dropdown.Item href="/userp">Logout</Dropdown.Item>
-                  
+                  <Dropdown.Item href="#" onClick={handlelogout}>Logout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </div>
           </nav>
-         {/* dash board items */}
-            <div className="container">
-               {children}              
-            </div>
-
+          {/* dash board items */}
+          <div className="container">{children}</div>
         </Col>
-
       </Row>
     </section>
   );

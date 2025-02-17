@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { AdminLoginapi, AdminVerify } from "../../../api/Adminapi/AdminApi";
+import { AdminLoginapi, Adminlogout, AdminVerify } from "../../../api/Adminapi/AdminApi";
 import { toast } from "react-toastify";
 
 // createAsyncThunk is use for api call in redux toolkit , it is function
 
 //  api call and get response here 
-// admin login
+// admin login slice
 export const AdminAuthlogin = createAsyncThunk("adminlogin", async (data) => {
   try {
     const response = await AdminLoginapi(data);
@@ -22,7 +22,7 @@ export const AdminAuthlogin = createAsyncThunk("adminlogin", async (data) => {
   }
 });
 
-// admin loggedin (verify) api
+// admin loggedin (verify) slice
 export const Adminloggedin = createAsyncThunk(
   "adminverify",
   async (thunkapi) => {
@@ -35,12 +35,28 @@ export const Adminloggedin = createAsyncThunk(
   }
 );
 
+  //  admin logout slice
+  export const Handleadminlogout = createAsyncThunk(
+    "adminlogout",
+    async(data) =>{
+      const response = await Adminlogout(data)
+      if(response.status === 200){
+        localStorage.removeItem('admin-token')
+         toast.success('Admin logout successfully !')
+      }else{
+        localStorage.removeItem('admin-token')
+          toast.error("something  wrong !")
+      }
+    }  
+  )
+
 //  create slices for admin  apis
 export const Admin_Slice = createSlice({
   name: " AdminSlice",
   initialState: {
     adminpayload: [],
     adminloggeddata: [],
+    adminlogoutdata : [],
     loading: false,
     error: null,
   },
@@ -70,8 +86,22 @@ export const Admin_Slice = createSlice({
       .addCase(Adminloggedin.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+      
+      // admin logout api 
+      .addCase(Handleadminlogout.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(Handleadminlogout.fulfilled, (state, action) => {
+        state.loading = false;
+        state.adminlogoutdata = action.payload
+      })
+      .addCase(Handleadminlogout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      }); 
   },
 });
 
 export default Admin_Slice.reducer;
+ 

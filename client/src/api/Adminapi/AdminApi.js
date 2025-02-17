@@ -15,3 +15,8 @@ export const AdminLoginapi = async (data,header) => {
 export const AdminVerify = async (header) => {
     return await commonrequest('GET' , `${BASE_URL}/adminauth/api/adminverify`,"", header , 'admin')
 }
+
+// Admin logout api 
+export const Adminlogout = async (header) =>{
+    return await commonrequest('GET' , `${BASE_URL}/adminauth/api/logout`,"", header , 'admin')
+}
