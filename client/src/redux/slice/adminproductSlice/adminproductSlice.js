@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   addcategory,
   addProduct,
+  getallproducts,
   getcategorydata,
 } from "../../../api/Productapi/Productapi";
 import { toast } from "react-toastify";
@@ -46,26 +47,41 @@ export const addProductbyadmin = createAsyncThunk(
   "add-product",
   async (data) => {
     try {
-      const response = await addProduct(data.formdata , data.categoryid ,data.config);
-      if(response.status === 200){
+      const response = await addProduct(
+        data.formdata,
+        data.categoryid,
+        data.config
+      );
+      if (response.status === 200) {
         // console.log("helo product" + response.data);
-        toast.success("Product has been added !")
+        toast.success("Product has been added !");
         return response.data;
+      } else {
+        toast.error(response.response.data.error);
       }
     } catch (error) {
-      toast.error("Product not added !")
-
-        throw error;
+      toast.error("Product not added !");
     }
   }
 );
+
+//  Slice for getall products
+export const getAddedproducts = createAsyncThunk("get-products", async (data) => {
+  try {
+    const response = await getallproducts(data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 const adminproductsSlice = createSlice({
   name: "amdinproducts",
   initialState: {
     addcategory: [],
     category_data: [],
-    addproducts : [],
+    addproducts: [],
+    getProductsbyadmin: [],
     loading: false,
     error: null,
   },
@@ -94,7 +110,7 @@ const adminproductsSlice = createSlice({
       .addCase(categorydata.rejected, (state) => {
         state.loading = true;
       })
-      // add cases for add product by admin 
+      // add cases for add product by admin
       .addCase(addProductbyadmin.pending, (state) => {
         state.loading = true;
       })
@@ -103,6 +119,18 @@ const adminproductsSlice = createSlice({
         state.loading = false;
       })
       .addCase(addProductbyadmin.rejected, (state) => {
+        state.loading = true;
+      })
+
+      //  get all products by added admin
+      .addCase(getAddedproducts.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAddedproducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.getProductsbyadmin = [action.payload];
+      })
+      .addCase(getAddedproducts.rejected, (state) => {
         state.loading = true;
       });
   },
