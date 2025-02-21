@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AdminAuthlogin } from "../../redux/slice/adminAuthSlice/AdminSlics";
@@ -24,15 +24,19 @@ export default function AdminLogin() {
       setError("This field is required !");
     } else {
       // api call
-      dispatch(AdminAuthlogin(inpval)).then((response)=>{
-          if(response.payload.token){
-             navigate('/admin/dashboard')
-          }
-      }).catch((error)=>{
-           console.log(error);
-      })
+      dispatch(AdminAuthlogin(inpval),
+      navigate('/admin/dashboard')
+     )
     } 
   };
+
+  const token = localStorage.getItem('admin-token')
+  useEffect(()=>{
+     if(token){
+      navigate('/admin/dashboard')
+     }
+  },[])
+
   return (
     <div>
       <>

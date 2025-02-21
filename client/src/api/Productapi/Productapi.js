@@ -18,9 +18,12 @@ export const addProduct = async (data ,categoryid , header) => {
 
 //  get all products
 export const getallproducts = async(data , header )=>{
-    //   return await commonrequest('GET', `${BASE_URL}/product/api/getProducts`,header , 'admin' )
       return await commonrequest('GET', `${BASE_URL}/product/api/getProducts?page=${data.page}`,"",header , 'admin' )
 }
 
+// delete product
+export const deleteproduct = async(productid,header)=>{
+    return await commonrequest('DELETE', `${BASE_URL}/product/api/products/${productid}`,{},header , 'admin' )
+}
 
 

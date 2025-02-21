@@ -10,25 +10,21 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 export default function AdminSidebar({ children }) {
   const navigate = useNavigate()
-  const token = localStorage.getItem('admin-token')
+ 
   const dispatch = useDispatch();
   const veryfyAdmin = () => {
     dispatch(Adminloggedin());
   };
   // fetch admin data 
   useEffect(() => {
-    if(token){
-      veryfyAdmin();
-    }else{
-       navigate('*')        
-    }
+      veryfyAdmin();      
   }, []);
   const adminloggeddata = useSelector((state) => state.admin);
-  // console.log("admin data", adminloggeddata.adminloggeddata);
+  console.log("admin data", adminloggeddata.adminloggeddata);
    
   const handlelogout = () =>{
      dispatch( Handleadminlogout()) 
-     navigate('/admin/admin-login')
+          navigate('/admin/admin-login')
   }
   
   return (
@@ -102,10 +98,10 @@ export default function AdminSidebar({ children }) {
             <div className="dropdown-basic">
               <Dropdown>
                 
-                {adminloggeddata.adminloggeddata.map((data, index) => {
+                { adminloggeddata ? adminloggeddata.adminloggeddata.map((data, index) => {
                   return (
                     <>
-                      <Dropdown.Toggle id="dropdown-basic">
+                      <Dropdown.Toggle key={index} id="dropdown-basic">
                         {/* <i
                           class="fa-regular fa-user"
                           style={{ fontSize: "29px", color: "gray" }}
@@ -116,7 +112,7 @@ export default function AdminSidebar({ children }) {
                       </Dropdown.Toggle>
                     </>
                   );
-                })}
+                }) : ""}
 
                 <Dropdown.Menu>
                   <Dropdown.Item href="#" onClick={handlelogout}>Logout</Dropdown.Item>

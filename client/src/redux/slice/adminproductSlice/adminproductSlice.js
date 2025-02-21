@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   addcategory,
   addProduct,
+  deleteproduct,
   getallproducts,
   getcategorydata,
 } from "../../../api/Productapi/Productapi";
@@ -75,6 +76,17 @@ export const getAddedproducts = createAsyncThunk("get-products", async (data) =>
   }
 });
 
+//  Slice for getall products
+export const deltedProduct = createAsyncThunk("delete-product", async (productid) => {
+  try {
+    const response = await deleteproduct(productid);
+    toast.success("Product deleted !")
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const adminproductsSlice = createSlice({
   name: "amdinproducts",
   initialState: {
@@ -82,6 +94,7 @@ const adminproductsSlice = createSlice({
     category_data: [],
     addproducts: [],
     getProductsbyadmin: [],
+    DeletedProducts : [],
     loading: false,
     error: null,
   },
@@ -131,6 +144,18 @@ const adminproductsSlice = createSlice({
         state.getProductsbyadmin = [action.payload];
       })
       .addCase(getAddedproducts.rejected, (state) => {
+        state.loading = true;
+      })
+
+      // delete product 
+      .addCase(deltedProduct.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deltedProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.DeletedProducts = action.payload;
+      })
+      .addCase(deltedProduct.rejected, (state) => {
         state.loading = true;
       });
   },

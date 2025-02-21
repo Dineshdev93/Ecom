@@ -25,28 +25,43 @@ export const AdminAuthlogin = createAsyncThunk("adminlogin", async (data) => {
 // admin loggedin (verify) slice
 export const Adminloggedin = createAsyncThunk(
   "adminverify",
-  async (thunkapi) => {
-    const response = await AdminVerify();
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      console.log("error");
+  async (_, thunkApi) => {
+    try {
+      const response = await AdminVerify();
+      if (response.status === 200) {
+        // alert("call")
+        return response.data;
+      } else {
+        localStorage.removeItem('admin-token') ; 
+        return thunkApi.rejectWithValue("Verification failed");
+      }
+    } catch (error) {
+      return thunkApi.rejectWithValue(error.message || "Something went wrong");
     }
   }
 );
 
+
   //  admin logout slice
   export const Handleadminlogout = createAsyncThunk(
     "adminlogout",
-    async(data) =>{
-      const response = await Adminlogout(data)
-      if(response.status === 200){
-        localStorage.removeItem('admin-token')
-         toast.success('Admin logout successfully !')
-      }else{
-        localStorage.removeItem('admin-token')
-          toast.error("something  wrong !")
-      }
+    async(thunkApi) =>{
+      try {
+        const response = await Adminlogout();
+        
+        if(response.status == 200){
+            toast.success("Admin Logout Done")
+            localStorage.removeItem("admin-token")
+            return response.data
+        }else{
+            toast.success("Admin Logout Done")
+            localStorage.removeItem("admin-token")
+            return thunkApi.rejectWithValue("error");
+        }
+    } catch (error) {
+        throw error;
+    }
+
     }  
   )
 
@@ -94,7 +109,7 @@ export const Admin_Slice = createSlice({
       })
       .addCase(Handleadminlogout.fulfilled, (state, action) => {
         state.loading = false;
-        state.adminlogoutdata = action.payload
+        state.adminlogoutdata = [action.payload]
       })
       .addCase(Handleadminlogout.rejected, (state, action) => {
         state.loading = false;

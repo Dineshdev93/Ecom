@@ -6,7 +6,7 @@ import Card from "react-bootstrap/Card";
 import { useDispatch, useSelector } from 'react-redux';
 import "./admin.scss";
 import Select from 'react-select'
-import { getAddedproducts } from '../../redux/slice/adminproductSlice/adminproductSlice';
+import { deltedProduct, getAddedproducts } from '../../redux/slice/adminproductSlice/adminproductSlice';
 export default function Adminproducts() {
   
   // const options = [
@@ -19,7 +19,7 @@ export default function Adminproducts() {
   const [pagecount , setPagecount] = useState(0)
   //  get response by redux slice
   const productdata = useSelector((state)=>state.products.getProductsbyadmin) 
-  const pagecounts = productdata[0].Pagination.pageCount;
+  
     
     
   //  disptach function
@@ -29,8 +29,8 @@ export default function Adminproducts() {
     const data = {
         page
     }
-    dispatch( getAddedproducts(data)).then(()=>{
-        setPagecount(pagecounts)
+    dispatch( getAddedproducts(data)).then((res)=>{
+        setPagecount(res.payload.Pagination.pageCount)
     })
   }
   useEffect(()=>{
@@ -46,6 +46,13 @@ export default function Adminproducts() {
       if(page >= pagecount){
         return setPage(page-1);
       }
+  }
+
+
+  // delete functionlity of Products
+  const deleteitem = (productid) =>{
+     dispatch(deltedProduct(productid))
+     productapi();
   }
 
   return (
@@ -70,10 +77,10 @@ export default function Adminproducts() {
                     <>
                         <Col md={2} className="mb-3">
                   <Card style={{ width: "", height: "" }}>
-                    <Card.Img variant="top" src={`${data.productimage}`} />
+                    <Card.Img variant="top" src={`${data.productimage}`} style={{ height: "200px", width: "100%", objectFit: "cover" }}/>
                     <Card.Body>
                       <Card.Title>{data.productname}</Card.Title>
-                      <button className=""><i className='fa-solid fa-trash' style={{color:"red"}}></i></button>
+                      <i className='fa-solid fa-trash' onClick={()=>deleteitem(data._id)} style={{color:"red",fontSize:"25px",cursor:"pointer"}}></i>
                     </Card.Body>
                   </Card>
                 </Col>
