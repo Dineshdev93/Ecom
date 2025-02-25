@@ -24,18 +24,20 @@ export default function AdminLogin() {
       setError("This field is required !");
     } else {
       // api call
-      dispatch(AdminAuthlogin(inpval),
-      navigate('/admin/dashboard')
-     )
+      dispatch(AdminAuthlogin(inpval)).then((res)=>{
+          if(res.payload.token){
+            navigate('/admin/dashboard')
+          }
+      })
     } 
   };
 
-  const token = localStorage.getItem('admin-token')
-  useEffect(()=>{
-     if(token){
-      navigate('/admin/dashboard')
-     }
-  },[])
+      const token = localStorage.getItem("admin-token");
+      useEffect(()=>{
+         if((token)){
+             navigate('/admin/dashboard')
+         }
+      })
 
   return (
     <div>

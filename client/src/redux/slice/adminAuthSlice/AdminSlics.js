@@ -13,6 +13,8 @@ export const AdminAuthlogin = createAsyncThunk("adminlogin", async (data) => {
       toast.success("login successfully done !");
       localStorage.setItem("admin-token", response.data.token);
       //   navigate('/admin/dashboard')
+      console.log('admin-token', response.data);
+      
       return response.data;
     } else {
       toast.error(response.response.data.error);
@@ -52,6 +54,8 @@ export const Adminloggedin = createAsyncThunk(
         if(response.status == 200){
             toast.success("Admin Logout Done")
             localStorage.removeItem("admin-token")
+            console.log('logout',response.data);
+            
             return response.data
         }else{
             toast.success("Admin Logout Done")

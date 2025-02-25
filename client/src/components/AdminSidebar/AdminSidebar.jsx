@@ -20,11 +20,14 @@ export default function AdminSidebar({ children }) {
       veryfyAdmin();      
   }, []);
   const adminloggeddata = useSelector((state) => state.admin);
-  console.log("admin data", adminloggeddata.adminloggeddata);
+  
    
   const handlelogout = () =>{
-     dispatch( Handleadminlogout()) 
-          navigate('/admin/admin-login')
+     dispatch( Handleadminlogout()).then((res)=>{
+       navigate('/admin/admin-login')
+     }).catch((err)=>{
+       navigate('/admin/admin-login')
+     })
   }
   
   return (
