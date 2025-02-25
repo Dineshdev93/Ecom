@@ -10,38 +10,88 @@ const {transporter} = require("../../helper");
 const usercontactDB = require("../../model/user/userContactModel");
 
 // register
+// exports.userRegister = async (req, res) => {
+//     const { firstname, lastname, email, password, confirmpassword } = req.body;
+
+
+//     if (!firstname || !email || !lastname || !password || !confirmpassword || !req.file) {
+//         res.status(400).json({ error: "all fileds are required" })
+//     }
+
+//     const file = req.file?.path;
+//     const upload = await cloudinary.uploader.upload(file);
+
+//     try {
+//         const preuser = await userDB.findOne({email:email});
+
+//         if(preuser){
+//             res.status(400).json({error:"this user is already existssssssssssss"});
+//             console.log("errorrrrrrrr");
+            
+//         }else if(password !== confirmpassword){
+//             res.status(400).json({error:"password and confirm password not match"});
+//         }else{
+//             const userData = new userDB({
+//                 firstname, lastname, email, password, userprofile:upload.secure_url
+//             });
+
+//             // here password hashing
+
+//             await userData.save();
+//             res.status(200).json(userData);
+//         }
+//     } catch (error) {
+//         res.status(400).json(error)
+//     }
+// }
 exports.userRegister = async (req, res) => {
     const { firstname, lastname, email, password, confirmpassword } = req.body;
 
-
-    if (!firstname || !email || !lastname || !password || !confirmpassword || !req.file) {
-        res.status(400).json({ error: "all fileds are required" })
-    }
-
-    const file = req.file?.path;
-    const upload = await cloudinary.uploader.upload(file);
-
     try {
-        const preuser = await userDB.findOne({email:email});
-
-        if(preuser){
-            res.status(400).json({error:"this user is already exist"});
-        }else if(password !== confirmpassword){
-            res.status(400).json({error:"password and confirm password not match"});
-        }else{
-            const userData = new userDB({
-                firstname, lastname, email, password, userprofile:upload.secure_url
-            });
-
-            // here password hashing
-
-            await userData.save();
-            res.status(200).json(userData);
+        // Check for required fields
+        if (!firstname || !email || !lastname || !password || !confirmpassword || !req.file) {
+            return res.status(400).json({ error: "All fields are required" });
         }
+
+        const file = req.file?.path;
+        
+        // Upload to Cloudinary inside try-catch to prevent unhandled errors
+        let upload;
+        try {
+            upload = await cloudinary.uploader.upload(file);
+        } catch (uploadError) {
+            return res.status(500).json({ error: "File upload failed", details: uploadError.message });
+        }
+
+        // Check if user already exists
+        const preuser = await userDB.findOne({ email: email });
+        if (preuser) {
+            return res.status(400).json({ error: "This user already exists" });
+        }
+
+        // Check password match
+        if (password !== confirmpassword) {
+            return res.status(400).json({ error: "Password and confirm password do not match" });
+        }
+
+        // Create new user
+        const userData = new userDB({
+            firstname,
+            lastname,
+            email,
+            password,
+            userprofile: upload.secure_url
+        });
+
+        await userData.save();
+        return res.status(200).json(userData);
+
     } catch (error) {
-        res.status(400).json(error)
+        console.error("Error in user registration:", error);
+        return res.status(500).json({ error: "Internal Server Error", details: error.message });
     }
-}
+};
+
 
 // login
 exports.login = async (req, res) => {

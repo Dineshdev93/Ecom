@@ -2,20 +2,70 @@ import React from 'react'
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import "./loginSignup.css";
+import { Registeruser } from '../../redux/slice/userAuthSlice/UserSlice';
+import {useDispatch , useSelector}  from 'react-redux'
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import Spiner from '../Loader/Spiner'
 const Signup = () => {
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [conpassword, setConpassword] = useState("");
   const [userProfile, setUserprofile] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(false);
   const [loader, setLoader] = useState(false);
   const [pass,setShowpass] = useState(false) 
   const [conpass, setConpass] = useState(false)
+  const navigate = useNavigate()
+  const[inpval , setInpval] = useState({
+      firstname:"",
+      lastname:"",
+      email:"",
+      password:"",
+      confirmpassword : ""
+  })
+
+  const handlechange = (e)=>{
+      const {name,value} = e.target;
+      setInpval({...inpval,[name]:value})
+  }
+
+  const dispatch = useDispatch()
+  const {userRegister , loading} = useSelector((state)=>state.userauth)
+  console.log("Postdata" ,userRegister , loading);
   
+  const handleSubmit = (e)=>{
+       e.preventDefault();
+       
+       let formdata = new FormData();
+       formdata.append("firstname",inpval.firstname)
+       formdata.append("lastname",inpval.lastname)
+       formdata.append("email",inpval.email)
+       formdata.append("password",inpval.password) 
+       formdata.append("userprofile" , userProfile)
+       formdata.append("confirmpassword",inpval.confirmpassword)
+       const headers = {
+              "Content-Type" : "multipart/form-data"
+       }
+       const data = {
+           formdata ,
+           headers
+       }
+       
+       if(inpval.firstname === "" || inpval.lastname === "" || inpval.email === "" || inpval.password === "" || userProfile === ""){
+           toast.error("All fields are required")
+       }else{
+         dispatch(Registeruser(data)).then((res)=>{
+                navigate ("/login")
+         }).catch((error)=>{
+            console.log(error);
+         })
+       }
+
+  }
+
+
   return (
     <div>
+      {
+        loading ? <Spiner/> :
         <section className="container signup_login_form_caontainer mb-5">
           <div className="row justify-content-center">
             <div className="col-md-6  register_user">
@@ -31,7 +81,7 @@ const Signup = () => {
                   </label>{" "}
                   <br />
                   <span style={{ color: "red" }}>
-                    {firstname.length === 0 && error ? error : ""}
+                    {inpval.firstname.length === 0 && error ? error : ""}
                   </span>
                   <input
                     type="text"
@@ -40,8 +90,8 @@ const Signup = () => {
                     aria-describedby="emailHelp"
                     placeholder="Enter first name"
                     name="firstname"
-                    onChange={(e) => setFirstname(e.target.value)}
-                    // value={""}
+                   onChange={handlechange}
+                    
                   />
                 </div>
                 <div className="mt-2 mb-3">
@@ -50,7 +100,7 @@ const Signup = () => {
                   </label>{" "}
                   <br/>
                   <span style={{ color: "red" }}>
-                    {lastname.length === 0 && error ? error : ""}
+                    {inpval.lastname.length === 0 && error ? error : ""}
                   </span>
                   <input
                     type="text"
@@ -58,8 +108,7 @@ const Signup = () => {
                     id="exampleInputlast"
                     aria-describedby="emailHelp"
                     placeholder="Enter first name"
-                    onChange={(e) => setLastname(e.target.value)}
-                    // value={lastname}
+                    onChange = {handlechange}
                     name="lastname"
                   />
                 </div>
@@ -77,8 +126,8 @@ const Signup = () => {
                     id="exampleInputimg"
                     aria-describedby="emailHelp"
                     placeholder="Enter first name"
-                    name="userProfile"
-                    // onChange={handleFileChange}
+                    name="userprofile"
+                    onChange={(e)=>setUserprofile(e.target.files[0])}
                   />
                 </div>
                 <div className="mt-2 mb-3">
@@ -87,7 +136,7 @@ const Signup = () => {
                   </label>
                   <br />
                   <span style={{ color: "red" }}>
-                    {email.length === 0 && error ? error : ""}
+                    {inpval.email.length === 0 && error ? error : ""}
                   </span>
                   <input
                     type="email"
@@ -95,9 +144,8 @@ const Signup = () => {
                     id="exampleInputEmail1"
                     aria-describedby="emailHelp"
                     placeholder="Enter email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    //  value={email}
                     name="email"
+                    onChange={handlechange}
                   />
                 </div>
                 <div className="mb-3 password_container">
@@ -106,7 +154,7 @@ const Signup = () => {
                   </label>{" "}
                   <br />
                   <span style={{ color: "red" }}>
-                    {password.length === 0 && error ? error : ""}
+                    {inpval.password.length === 0 && error ? error : ""}
                   </span>
                   <input
                     type={pass ? "text" : "password"}
@@ -114,7 +162,7 @@ const Signup = () => {
                     id="exampleInputPassword1"
                     placeholder="Enter password"
                     name="password"
-                    onChange={(e) => setPassword(e.target.value)}
+                   onChange = {handlechange}
                   />
                   <div className="eye_icon">
                     <span onClick={()=>setShowpass(!pass)} style={{cursor:"pointer"}}>
@@ -128,15 +176,15 @@ const Signup = () => {
                   </label>{" "}
                   <br />
                   <span style={{ color: "red" }}>
-                    {conpassword.length === 0 && error ? error : ""}
+                    {conpass.length === 0 && error ? error : ""}
                   </span>
                   <input
                     type={conpass ? "text" : "password"}
                     className="form-control"
                     id="exampleInputPassword2"
                     placeholder="Enter confirm password"
-                    name="conPassword"
-                    onChange={(e) => setConpassword(e.target.value)}
+                    name="confirmpassword"
+                     onChange={handlechange}
                   />
                   <div className="eye_icon">
                     <span onClick={()=>setConpass(!conpass)} style={{cursor:"pointer"}}>
@@ -146,12 +194,13 @@ const Signup = () => {
                   </div>
                 </div>
                 <div className="btn_register">
-                  <button >Submit</button>
+                  <button onClick={handleSubmit}>Submit</button>
                 </div>
               </form>
             </div>
           </div>
         </section>
+      }
     </div>
   )
 }

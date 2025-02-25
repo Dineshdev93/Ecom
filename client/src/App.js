@@ -20,20 +20,23 @@ import Adminaddproduct from "./pages/Admin/Adminaddproduct";
 import ProductCategory from "./pages/Admin/ProductCategory";
 import Orders from "./pages/Admin/Orders";
 import { Slide, ToastContainer} from 'react-toastify';
-import Error from "./Error";
+import Protectroute from "./components/Protectedroute/Protectroute";
 function App() {
   return (
     <div className="App ">
       
         <Routes>
             {/* Admin Routes */}
-          <Route path="/admin/dashboard" element={<AdminCommonlayout><Admindashboard /></AdminCommonlayout>} />
-          <Route path="/admin/products" element={<AdminCommonlayout><Adminproducts /></AdminCommonlayout>} />
-          <Route path="/admin/addproducts" element={<AdminCommonlayout><Adminaddproduct /></AdminCommonlayout>} />
-          <Route path="/admin/category" element={<AdminCommonlayout><ProductCategory /></AdminCommonlayout>} />
-          <Route path="/admin/orders" element={<AdminCommonlayout><Orders /></AdminCommonlayout>} />
-          <Route path="/admin/admin-login" element={<Layout><AdminLogin /></Layout>} />
+            {/* use of protected routes */}
             
+          <Route path="/admin/*" element={<Protectroute />}>  
+            <Route path="dashboard" element={<AdminCommonlayout><Admindashboard /></AdminCommonlayout>} />
+            <Route path="products" element={<AdminCommonlayout><Adminproducts /></AdminCommonlayout>} />
+            <Route path="addproducts" element={<AdminCommonlayout><Adminaddproduct /></AdminCommonlayout>} />
+            <Route path="category" element={<AdminCommonlayout><ProductCategory /></AdminCommonlayout>} />
+            <Route path="orders" element={<AdminCommonlayout><Orders /></AdminCommonlayout>} />
+          </Route>
+          <Route path="/admin/admin-login" element={<Layout><AdminLogin /></Layout>} />
 
            {/* USer routes */}
           <Route path="/" element={<Layout><Home /></Layout>} />
@@ -47,7 +50,7 @@ function App() {
           <Route path="/shipping" element={<Layout><Shipping/></Layout>} />
           <Route path="/checkout" element={<Layout><Checkout/></Layout>} />
           <Route path="/user-orders" element={<Layout><Userorders/></Layout>} /> 
-          <Route path="*" element={<Error/>}/>
+          {/* <Route path="*" element={<Error/>}/> */}
         </Routes>
         <ToastContainer
            position="top-center"

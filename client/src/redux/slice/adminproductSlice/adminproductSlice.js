@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   addcategory,
   addProduct,
+  deleteproduct,
+  getallproducts,
   getcategorydata,
 } from "../../../api/Productapi/Productapi";
 import { toast } from "react-toastify";
@@ -46,26 +48,53 @@ export const addProductbyadmin = createAsyncThunk(
   "add-product",
   async (data) => {
     try {
-      const response = await addProduct(data.formdata , data.categoryid ,data.config);
-      if(response.status === 200){
+      const response = await addProduct(
+        data.formdata,
+        data.categoryid,
+        data.config
+      );
+      if (response.status === 200) {
         // console.log("helo product" + response.data);
-        toast.success("Product has been added !")
+        toast.success("Product has been added !");
         return response.data;
+      } else {
+        toast.error(response.response.data.error);
       }
     } catch (error) {
-      toast.error("Product not added !")
-
-        throw error;
+      toast.error("Product not added !");
     }
   }
 );
+
+//  Slice for getall products
+export const getAddedproducts = createAsyncThunk("get-products", async (data) => {
+  try {
+    const response = await getallproducts(data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//  Slice for getall products
+export const deltedProduct = createAsyncThunk("delete-product", async (productid) => {
+  try {
+    const response = await deleteproduct(productid);
+    toast.success("Product deleted !")
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 const adminproductsSlice = createSlice({
   name: "amdinproducts",
   initialState: {
     addcategory: [],
     category_data: [],
-    addproducts : [],
+    addproducts: [],
+    getProductsbyadmin: [],
+    DeletedProducts : [],
     loading: false,
     error: null,
   },
@@ -94,7 +123,7 @@ const adminproductsSlice = createSlice({
       .addCase(categorydata.rejected, (state) => {
         state.loading = true;
       })
-      // add cases for add product by admin 
+      // add cases for add product by admin
       .addCase(addProductbyadmin.pending, (state) => {
         state.loading = true;
       })
@@ -103,6 +132,30 @@ const adminproductsSlice = createSlice({
         state.loading = false;
       })
       .addCase(addProductbyadmin.rejected, (state) => {
+        state.loading = true;
+      })
+
+      //  get all products by added admin
+      .addCase(getAddedproducts.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAddedproducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.getProductsbyadmin = [action.payload];
+      })
+      .addCase(getAddedproducts.rejected, (state) => {
+        state.loading = true;
+      })
+
+      // delete product 
+      .addCase(deltedProduct.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deltedProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.DeletedProducts = action.payload;
+      })
+      .addCase(deltedProduct.rejected, (state) => {
         state.loading = true;
       });
   },

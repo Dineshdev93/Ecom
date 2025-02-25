@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Select from "react-select";
+import Spiner from "../Loader/Spiner";
 import {
   addProductbyadmin,
   categorydata,
@@ -16,16 +17,37 @@ export default function Adminaddproduct() {
 
   const category_data = useSelector((state) => state.products.category_data);
   // console.log("API Response:", category_data);
-  const options = category_data
-    ? category_data.map((cat) => ({
-        value: cat._id,
-        label: cat.categoryname,
-      }))
-    : [];
+  
+
+
+
 
   // states for consumeing form data
+  const [categoryState ,setCategorystate] = useState([])
   const [categoryid, setCategoryid] = useState("");
   const [productimage, setProductimage] = useState("");
+  const [loader , setLoader] = useState(false)
+  const handleImage = (e) =>{
+      const file = e.target.files[0]
+      const allowedTypes = ["image/png", "image/jpg", "image/jpeg"];
+      if(!allowedTypes.includes(file.type)){
+          toast.error('Only png , jpeg or jpg images allowed')
+      }else{
+         setProductimage(file)
+      }
+  }
+
+  useEffect(()=>{
+      let arr = []
+      for(let i = 0; i<category_data.length ; i++){
+        arr.push({
+          value: category_data[i]._id,
+          label: category_data[i].categoryname,
+        });
+      }
+      setCategorystate(arr)
+  },[category_data])
+
   const [inpval, setInpval] = useState({
     productname: "",
     price: "",
@@ -50,6 +72,7 @@ export default function Adminaddproduct() {
   };
 
   const handlesubmit = (e) => {
+    setLoader(true)
     e.preventDefault();
     let formdata = new FormData();
     formdata.append("productname", productname);
@@ -73,13 +96,27 @@ export default function Adminaddproduct() {
         config,
         categoryid,
       };
-      dispatch(addProductbyadmin(datasent));
+      dispatch(addProductbyadmin(datasent)).then((res)=>{
+        setLoader(false)
+        if(res.payload){
+          setInpval({
+            productname: "",
+            price: "",
+            quantity: "",
+            discount: "",
+            description: "",
+          });
+          setCategoryid("")
+          setProductimage("") 
+        }
+      })
     }
   };
 
   return (
     <div>
-      <section className="container signup_login_form_caontainer mb-5">
+      { loader ?  <Spiner/> :
+        <section className="container signup_login_form_caontainer mb-5">
         <div className="row justify-content-center">
           <div className="col-md-6  register_user">
             <h1 className="text-center mt-3">Add Product</h1>
@@ -103,7 +140,7 @@ export default function Adminaddproduct() {
               </div>
               <div className="mt-3">
                 <label htmlFor="">Product Category</label>
-                <Select options={options} onChange={handleCategoryChange} />
+                <Select options={categoryState} onChange={handleCategoryChange} />
               </div>
 
               <div className="mt-2 mb-3">
@@ -178,7 +215,7 @@ export default function Adminaddproduct() {
                   aria-describedby="emailHelp"
                   placeholder="Enter first name"
                   name="productimage"
-                  onChange={(e) => setProductimage(e.target.files[0])}
+                  onChange={handleImage}
                 />
               </div>
 
@@ -188,7 +225,8 @@ export default function Adminaddproduct() {
             </form>
           </div>
         </div>
-      </section>
+        </section>
+      }
     </div>
   );
 }
