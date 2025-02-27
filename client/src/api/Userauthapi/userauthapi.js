@@ -4,3 +4,7 @@ import { BASE_URL } from "../helper";
 export const userRegister = async(data , header)=>{
      return await commonrequest('POST',`${BASE_URL}/userauth/api/register`,data,header , "");
 }
+
+export const userLogin = async(data , header)=>{
+     return await commonrequest('POST',`${BASE_URL}/userauth/api/login`,data , header , "");
+}
