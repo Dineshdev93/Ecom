@@ -10,11 +10,7 @@ export const AdminAuthlogin = createAsyncThunk("adminlogin", async (data) => {
   try {
     const response = await AdminLoginapi(data);
     if (response.status === 200) {
-      toast.success("login successfully done !");
-      localStorage.setItem("admin-token", response.data.token);
-      //   navigate('/admin/dashboard')
-      console.log('admin-token', response.data);
-      
+      toast.success("login successfully done !"); 
       return response.data;
     } else {
       toast.error(response.response.data.error);

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Header from './Headers/Header'
 import Footer from './Footer/Footer'
 export default function Layout({children}) {

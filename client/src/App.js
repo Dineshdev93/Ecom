@@ -21,6 +21,7 @@ import ProductCategory from "./pages/Admin/ProductCategory";
 import Orders from "./pages/Admin/Orders";
 import { Slide, ToastContainer} from 'react-toastify';
 import Protectroute from "./components/Protectedroute/Protectroute";
+import { UserPrivateroute } from "./components/Protectedroute/UserprivateRoute";
 function App() {
   return (
     <div className="App ">
@@ -39,17 +40,26 @@ function App() {
           <Route path="/admin/admin-login" element={<Layout><AdminLogin /></Layout>} />
 
            {/* USer routes */}
+          
           <Route path="/" element={<Layout><Home /></Layout>} />
           <Route path="/products" element={<Layout><Productpage /></Layout>} />
           <Route path="/productsdetail/:id" element={<Layout><Productdetailspage /></Layout>} />
+
+
+           {/* Private route */}
+           <Route element={<UserPrivateroute/>}>
           <Route path="/cart" element={<Layout><Carts /></Layout>} />
           <Route path="/userprofile" element={<Layout><Userprofile /></Layout>} />
-          <Route path="/login" element={<Layout><Login /></Layout>} />
-          <Route path="/signup" element={<Layout><Signup /></Layout>} />
-          <Route path="/forgot-password" element={<Layout><Forgotpassword /></Layout>} />
           <Route path="/shipping" element={<Layout><Shipping/></Layout>} />
           <Route path="/checkout" element={<Layout><Checkout/></Layout>} />
-          <Route path="/user-orders" element={<Layout><Userorders/></Layout>} /> 
+          <Route path="/user-orders" element={<Layout><Userorders/></Layout>}/> 
+           </Route>
+           
+
+
+          <Route path="/forgot-password" element={<Layout><Forgotpassword /></Layout>} />
+          <Route path="/signup" element={<Layout><Signup /></Layout>} />
+          <Route path="/login" element={<Layout><Login /></Layout>} />
           {/* <Route path="*" element={<Error/>}/> */}
         </Routes>
         <ToastContainer

@@ -58,7 +58,6 @@ const Signup = () => {
             console.log(error);
          })
        }
-
   }
 
 

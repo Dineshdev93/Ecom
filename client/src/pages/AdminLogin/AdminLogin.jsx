@@ -3,6 +3,7 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AdminAuthlogin } from "../../redux/slice/adminAuthSlice/AdminSlics";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 export default function AdminLogin() {
   const [error, setError] = useState();
   const [showpass, setShowpass] = useState();
@@ -25,9 +26,10 @@ export default function AdminLogin() {
     } else {
       // api call
       dispatch(AdminAuthlogin(inpval)).then((res)=>{
-          if(res.payload.token){
-            navigate('/admin/dashboard')
-          }
+         if(res.payload && res.payload.token){
+              localStorage.setItem("admin-token",res.payload.token)
+              navigate('/admin/dashboard')
+         } 
       })
     } 
   };
