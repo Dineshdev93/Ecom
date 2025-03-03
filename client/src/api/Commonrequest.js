@@ -12,6 +12,8 @@ export const commonrequest = async (methods, url, body, header, auth) => {
   //   For use auth like admin or user , assign token in headers
   let admintoken = localStorage.getItem("admin-token");
   let usertoken = localStorage.getItem("user-token");
+  // console.log(usertoken);
+  
   if (auth === "admin") {
     config.headers.Authorization = admintoken;
   } else {

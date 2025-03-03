@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import "./loginSignup.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { Loginuser } from "../../redux/slice/userAuthSlice/UserSlice";
+import { Loginuser, Userverifyed } from "../../redux/slice/userAuthSlice/UserSlice";
+
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,7 +14,11 @@ export default function Login() {
   const [showpass, setShowpass] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const {LoggeduserData} = useSelector((state)=>state.userauth)
+  useEffect(()=>{
+     dispatch(Userverifyed());
+   },[])
+   
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
@@ -24,8 +30,7 @@ export default function Login() {
         toast.error("All fields are required");
       } else {
         dispatch(Loginuser(data)).then((res) => {
-          console.log(res);
-
+          // console.log(res);
           if (res.payload === undefined) {
             toast.error("Invalid details");
           } else {

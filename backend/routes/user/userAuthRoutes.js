@@ -25,8 +25,4 @@ router.post("/usercontact",userauthenticate,userController.userContact);
 router.get("/getAlluser",adminauthenticate,userController.getAlluser);
 router.delete("/userdelete/:userid",adminauthenticate,userController.userDelete);
 
-
-
-
-
 module.exports = router;

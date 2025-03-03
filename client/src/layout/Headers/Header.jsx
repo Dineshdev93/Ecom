@@ -1,15 +1,40 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink ,useNavigate} from "react-router-dom";
 import "./header.scss";
 import Dropdown from "react-bootstrap/Dropdown";
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
+
+import { useEffect } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import {useSelector , useDispatch}  from 'react-redux'
+import { Userlogout, Userverifyed } from "../../redux/slice/userAuthSlice/UserSlice";
+
 export default function Header() {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  
+
+  // User verified
+  
+  const {LoggeduserData , loading} = useSelector((state)=>state.userauth)
+  const {Loginuserdata}  = useSelector((state)=>state.userauth)
+  const navigate = useNavigate();
+  
+    const dispatch = useDispatch();
+
+    useEffect(()=>{
+       dispatch(Userverifyed());
+    },[Loginuserdata])
+
+
+    const logout = () =>{
+        dispatch(Userlogout() );
+        navigate('/')
+    }
+    
   return (
     <header>
       <nav className="container mt-3">
@@ -34,13 +59,28 @@ export default function Header() {
           <div className="dropdown-basic">
             <Dropdown>
               <Dropdown.Toggle id="dropdown-basic">
-                <i class="fa-regular fa-user"></i>
+              
+                {
+                  loading  ? LoggeduserData.map((item)=>{
+                    return (
+                      <>
+                         <img src={`${item.userprofile}`} alt="logo" width={50} />
+                      </>
+                    )
+                  }) :
+                  <i class="fa-regular fa-user"></i>
+                } 
               </Dropdown.Toggle>
-
               <Dropdown.Menu>
-                <Dropdown.Item href="/userprofile">Profile</Dropdown.Item>
-                <Dropdown.Item href="/login">Log in</Dropdown.Item>
-                
+                {
+                  LoggeduserData.length <= 0  ?
+                    <Dropdown.Item href="/login">Log in</Dropdown.Item>
+                  :
+                  <>
+                    <Dropdown.Item href="/userprofile">Profile</Dropdown.Item>
+                    <Dropdown.Item href="#" onClick={logout} >Log out</Dropdown.Item>
+                  </> 
+                }
               </Dropdown.Menu>
             </Dropdown>
           </div>
