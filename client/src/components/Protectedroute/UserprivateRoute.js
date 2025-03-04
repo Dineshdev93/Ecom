@@ -9,6 +9,6 @@ export const UserPrivateroute = ()=>{
         useEffect(()=>{
            dispatch(Userverifyed());
         },[])
-    const isauthenticated = LoggeduserData.length >= 0 ;
+    const isauthenticated = LoggeduserData.length > 0 ;
     return isauthenticated ? <Outlet/> : <Navigate to={'/login'} />
 }

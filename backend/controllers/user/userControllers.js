@@ -164,8 +164,6 @@ exports.forgotpassword = async(req,res)=>{
     try {
 
         const userfind = await userDB.findOne({email:email});
-     
-
         if(userfind){
             // token generate for password change
             const token = jwt.sign({_id:userfind._id},SECRET_KEY,{

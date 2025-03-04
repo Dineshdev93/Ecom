@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { userLogin, userLogout, userRegister, userVerify } from "../../../api/Userauthapi/userauthapi";
+import {
+  ForgotpasswordResetlink,
+  userLogin,
+  userLogout,
+  userRegister,
+  userVerify,
+} from "../../../api/Userauthapi/userauthapi";
 import { toast } from "react-toastify";
 
 export const Registeruser = createAsyncThunk(
@@ -25,12 +31,12 @@ export const Loginuser = createAsyncThunk(
     try {
       const response = await userLogin(data);
       if (response.status === 200) {
-        localStorage.setItem("user-token",response.data.token)
+        localStorage.setItem("user-token", response.data.token);
         toast.success("User Login Successfully");
         // console.log("data" , response.data);
         return response.data;
-      } else{
-         return thunkApi.rejectWithValue();
+      } else {
+        return thunkApi.rejectWithValue();
       }
     } catch (error) {
       return thunkApi.rejectWithValue(error);
@@ -47,8 +53,8 @@ export const Userverifyed = createAsyncThunk(
       if (response.status === 200) {
         // console.log("user-verified" ,response.data);
         return response.data;
-      } else{
-         return thunkApi.rejectWithValue();
+      } else {
+        return thunkApi.rejectWithValue();
       }
     } catch (error) {
       return thunkApi.rejectWithValue(error);
@@ -56,28 +62,40 @@ export const Userverifyed = createAsyncThunk(
   }
 );
 
-  export const Userlogout =  createAsyncThunk(
-    'user-logout',
-    async()=>{
-        try {
-           const response = await userLogout();
-           if(response.status === 200){
-              toast.success("User Logout Successfully");
-              localStorage.removeItem("user-token");
-           }
-        } catch (error) {
-             toast.error("Failed")
-        }
+export const Userlogout = createAsyncThunk("user-logout", async () => {
+  try {
+    const response = await userLogout();
+    if (response.status === 200) {
+      toast.success("User Logout Successfully");
+      localStorage.removeItem("user-token");
     }
-  )
+  } catch (error) {
+    toast.error("Failed");
+  }
+});
+// forgot password link generate
+export const SendPasswordlink = createAsyncThunk("Send-link", async (data) => {
+  try {
+        const response = await ForgotpasswordResetlink(data)
+        if(response.data.message){
+          toast.success(response.data.message)
+        }else{
+           toast.error(response.data.error) 
+        } 
+        } catch (error) {
+            toast.error("This user is not exist !")
+            throw error
+        }
+});
 
 const UserAuthSlice = createSlice({
   name: "userSlice",
   initialState: {
     userRegister: [],
-    Loginuserdata : [],
-    LoggeduserData : [],
-    LogOutUser : [],
+    Loginuserdata: [],
+    LoggeduserData: [],
+    LogOutUser: [],
+    Forgotpassword : [],
     loading: false,
   },
   extraReducers: (builder) => {
@@ -94,42 +112,55 @@ const UserAuthSlice = createSlice({
       })
 
       // user login cases
-      .addCase(Loginuser.pending, (state)=>{
-           state.loading = true;
+      .addCase(Loginuser.pending, (state) => {
+        state.loading = true;
       })
-      .addCase(Loginuser.fulfilled,(state,action)=>{
-          state.loading = false;
-          state.Loginuserdata = [action.payload]
+      .addCase(Loginuser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.Loginuserdata = [action.payload];
       })
-      .addCase(Loginuser.rejected,(state)=>{
-          state.loading = false ; 
+      .addCase(Loginuser.rejected, (state) => {
+        state.loading = false;
       })
 
       // user verify cases
-      .addCase(Userverifyed.pending,(state)=>{
-          state.loading = false;
+      .addCase(Userverifyed.pending, (state) => {
+        state.loading = true;
       })
-      .addCase(Userverifyed.fulfilled,(state,action)=>{
-          state.loading = true;
-          state.LoggeduserData = [action.payload]
+      .addCase(Userverifyed.fulfilled, (state, action) => {
+        state.loading = false;
+        state.LoggeduserData = [action.payload];
       })
-      .addCase(Userverifyed.rejected,(state)=>{
-          state.loading = false;
+      .addCase(Userverifyed.rejected, (state) => {
+        state.loading = false;
       })
 
       // user logout cases
-      .addCase(Userlogout.pending,(state)=>{
-          state.pending = true ; 
+      .addCase(Userlogout.pending, (state) => {
+        state.pending = true;
       })
-      .addCase(Userlogout.fulfilled,(state,action)=>{
-           state.pending = false;
-           state.LogOutUser = [action.payload];
-           state.LoggeduserData = []
+      .addCase(Userlogout.fulfilled, (state, action) => {
+        state.pending = false;
+        state.LogOutUser = [action.payload];
+        state.LoggeduserData = [];
       })
-      .addCase(Userlogout.rejected,(state)=>{
-          state.loading = false; 
+      .addCase(Userlogout.rejected, (state) => {
+        state.loading = false;
       })
-    },
+
+      // Forgot Password link
+      .addCase(SendPasswordlink.pending ,  (state)=>{
+           state.loading = true ;
+      })
+      .addCase(SendPasswordlink.fulfilled , (state , action)=>{
+          state.loading = false 
+          state.Forgotpassword = [action.payload]
+      })
+      .addCase(SendPasswordlink.rejected , (state)=>{
+          state.loading = false
+      })
+
+  },
 });
 
 export default UserAuthSlice.reducer;

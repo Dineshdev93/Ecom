@@ -16,3 +16,7 @@ export const userVerify = async(header)=>{
 export const userLogout = async(header)=>{
      return await commonrequest('GET',`${BASE_URL}/userauth/api/logout`,null , header , "") 
 }
+
+export const ForgotpasswordResetlink = async(data,header)=>{
+     return await commonrequest('POST' , `${BASE_URL}/userauth/api/forgotpassword` , data , header , "")
+}

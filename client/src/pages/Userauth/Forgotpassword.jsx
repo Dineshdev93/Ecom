@@ -1,8 +1,22 @@
 import React from 'react'
 import './loginSignup.css'
 import { useState } from 'react';
+import {useDispatch} from 'react-redux'
+import { SendPasswordlink } from '../../redux/slice/userAuthSlice/UserSlice';
 export default function Forgotpassword() {
     const [email, setEmail] = useState("");
+    const dispatch = useDispatch();
+
+    const data = {
+        email
+    }
+
+    const forgotpassword = () =>{
+        dispatch(SendPasswordlink(data)).then((res)=>{
+            setEmail("")
+        })       
+    }
+
   return (
     <div>
        <section className="mt-5 mb-5 forgotpassword">
@@ -23,10 +37,11 @@ export default function Forgotpassword() {
                     id="forgotpass"
                     placeholder="Enter your email"
                     className="mt-4"
+                    value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                   <div className="mt-4">
-                    <button className="forgotsubmit">
+                    <button className="forgotsubmit" onClick={forgotpassword}>
                       Generate Link
                     </button>
                   </div>
