@@ -19,20 +19,20 @@ export default function Header() {
 
   // User verified
   
-  const {LoggeduserData , loading} = useSelector((state)=>state.userauth)
-  const {Loginuserdata}  = useSelector((state)=>state.userauth)
+  const {LoggeduserData ,Loginuserdata, loading} = useSelector((state)=>state.userauth)
   const navigate = useNavigate();
   
     const dispatch = useDispatch();
 
     useEffect(()=>{
        dispatch(Userverifyed());
-    },[Loginuserdata])
-
-
-    const logout = () =>{
+      },[Loginuserdata])
+      
+      
+      const logout = () =>{
         dispatch(Userlogout() );
         navigate('/')
+        console.log(loading);  
     }
     
   return (
@@ -61,7 +61,7 @@ export default function Header() {
               <Dropdown.Toggle id="dropdown-basic">
               
                 {
-                  loading  ? LoggeduserData.map((item)=>{
+                  LoggeduserData.length > 0  ? LoggeduserData.map((item)=>{
                     return (
                       <>
                          <img src={`${item.userprofile}`} alt="logo" width={50} />

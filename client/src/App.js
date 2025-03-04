@@ -8,6 +8,7 @@ import Carts from "./pages/Carts/Carts";
 import Userprofile from "./pages/Userprofile/Userprofile";
 import Login from "./pages/Userauth/Login";
 import Signup from "./pages/Userauth/Signup";
+import Resetpassword from "./pages/Userauth/Resetpassword";
 import Forgotpassword from "./pages/Userauth/Forgotpassword";
 import Shipping from "./pages/Shipping/Shipping";
 import Checkout from "./pages/Checkout/Checkout";
@@ -60,6 +61,7 @@ function App() {
           <Route path="/forgot-password" element={<Layout><Forgotpassword /></Layout>} />
           <Route path="/signup" element={<Layout><Signup /></Layout>} />
           <Route path="/login" element={<Layout><Login /></Layout>} />
+          <Route path="/resetpassword" element={<Layout><Resetpassword /></Layout>} />
           {/* <Route path="*" element={<Error/>}/> */}
         </Routes>
         <ToastContainer
